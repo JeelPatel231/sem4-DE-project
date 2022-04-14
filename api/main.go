@@ -7,6 +7,10 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
+type Error struct {
+	Err error `json:"error"`
+}
+
 func main() {
 	// localDemo()
 
@@ -14,9 +18,11 @@ func main() {
 
 	app := fiber.New()
 	app.Get("/getlayout/:uuid", func(c *fiber.Ctx) error {
-		return c.JSON(
-			database.GetLayout(db, c.Params("uuid")),
-		)
+		data, err := database.GetLayout(db, c.Params("uuid"))
+		if err != nil {
+			return c.JSON(Error{err})
+		}
+		return c.JSON(data)
 	})
 
 	app.Listen(":3000")
