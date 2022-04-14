@@ -27,7 +27,7 @@ func main() {
 	app.Get("/getlayout/:uuid", func(c *fiber.Ctx) error {
 		data, err := database.GetLayout(db, c.Params("uuid"))
 		if err != nil {
-			return c.JSON(Error{err})
+			return err
 		}
 		return c.JSON(data)
 	})
