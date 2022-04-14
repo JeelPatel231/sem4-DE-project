@@ -8,10 +8,6 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/cors"
 )
 
-type Error struct {
-	Err error `json:"error"`
-}
-
 func main() {
 	// localDemo()
 

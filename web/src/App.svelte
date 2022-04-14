@@ -18,7 +18,7 @@
 {/if}
 <script>
 
-export let request;
+let request;
 let inputEl;
 let block_list = ["&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;","◯","⚫","██"]
 
