@@ -1,23 +1,29 @@
-<div class="container">
-	{#await request}
-		<h1>LOADING</h1>
-	{:then json}
-		{#each json as row}
-			{#each row as block}
-				<span contenteditable="false" bind:innerHTML="{block_list[block]}" />
-			{/each}<br>
-		{/each}
-	{:catch err}
-		<h1>{err}</h1>
-	{/await}
-</div>
+<input bind:this={inputEl} type="text">
+<button on:click={handleClick}>GET</button>
 
+{#if request != undefined}
+	<div class="container">
+		{#await request}
+			<h1>LOADING</h1>
+		{:then json}
+			{#each json as row}
+				{#each row as block}
+					<span contenteditable="false" bind:innerHTML="{block_list[block]}" />
+				{/each}<br>
+			{/each}
+		{:catch err}
+			<h4>{err}</h4>
+		{/await}
+	</div>
+{/if}
 <script>
 
+export let request;
+let inputEl;
 let block_list = ["&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;","◯","⚫","██"]
 
 async function apiCall() {
-	let uuid = "99ae4996-c5a4-4b14-a78b-813ccdc358cd"
+	let uuid = inputEl.value;
 	const res = await fetch(`http://localhost:3000/getlayout/${uuid}`);
 	const text = await res.json();
 
@@ -28,7 +34,9 @@ async function apiCall() {
 	}
 }
 
-let request = apiCall()
+const handleClick = () => {
+	request = apiCall()
+}
 
 </script>
 
