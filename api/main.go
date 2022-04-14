@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 )
 
 type Error struct {
@@ -17,6 +18,12 @@ func main() {
 	db := database.Connect(os.Getenv("POSTGRES_URL"))
 
 	app := fiber.New()
+	app.Use(cors.New(
+		cors.Config{
+			AllowOrigins: "*",
+		},
+	))
+
 	app.Get("/getlayout/:uuid", func(c *fiber.Ctx) error {
 		data, err := database.GetLayout(db, c.Params("uuid"))
 		if err != nil {
