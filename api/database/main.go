@@ -3,8 +3,6 @@ package database
 import (
 	"database/sql"
 	"encoding/json"
-	"fmt"
-	"strings"
 
 	_ "github.com/lib/pq"
 )
@@ -44,7 +42,7 @@ func InsertRestaurant(db *sql.DB, name string) (*string, error) {
 // inserts the restaurant's layout in the 2nd table of db
 // referenced uui from 1st table primary key
 func InsertLayout(db *sql.DB, uuid string, layout [][]int) error {
-	array := strings.Join(strings.Fields(fmt.Sprint(layout)), ",")
+	array, _ := json.Marshal(layout)
 
 	_, err := db.Query(
 		"INSERT into restaurant (id, layout) VALUES ($1,$2)",
