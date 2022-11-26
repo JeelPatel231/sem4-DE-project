@@ -2,6 +2,7 @@ package main
 
 import (
 	"api/database"
+	"encoding/json"
 	"os"
 
 	"github.com/gofiber/fiber/v2"
@@ -26,6 +27,45 @@ func main() {
 			return err
 		}
 		return c.JSON(data)
+	})
+
+	app.Post("/setlayout/:uuid", func(c *fiber.Ctx) error {
+		var postBody [][]int
+		json.Unmarshal(c.Body(), &postBody)
+		err := database.UpdateLayout(db, c.Params("uuid"), postBody)
+		if err != nil {
+			return err
+		}
+
+		return c.SendStatus(200)
+	})
+
+	app.Post("/register/:name", func(c *fiber.Ctx) error {
+		resp, err := database.InsertRestaurant(db, c.Params("name"))
+		if err != nil {
+			return err
+		}
+		err = database.InsertLayout(db, *resp, [][]int{})
+		if err != nil {
+			return err
+		}
+		return c.Send([]byte(*resp))
+	})
+
+	app.Post("/deleteres/:uuid", func(c *fiber.Ctx) error {
+		err := database.DeleteRestaurant(db, c.Params("uuid"))
+		if err != nil {
+			return err
+		}
+		return c.SendStatus(200)
+	})
+
+	app.Post("/delete/:uuid", func(c *fiber.Ctx) error {
+		err := database.DeleteLayout(db, c.Params("uuid"))
+		if err != nil {
+			return err
+		}
+		return c.SendStatus(200)
 	})
 
 	app.Listen(":3000")

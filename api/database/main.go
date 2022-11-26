@@ -39,6 +39,17 @@ func InsertRestaurant(db *sql.DB, name string) (*string, error) {
 	return &response, nil
 }
 
+func DeleteRestaurant(db *sql.DB, uuid string) error {
+	_, err := db.Query(
+		"DELETE FROM restaurant where id=$1",
+		uuid,
+	)
+	if err != nil {
+		return err
+	}
+	return DeleteLayout(db, uuid)
+}
+
 // inserts the restaurant's layout in the 2nd table of db
 // referenced uui from 1st table primary key
 func InsertLayout(db *sql.DB, uuid string, layout [][]int) error {
@@ -48,6 +59,20 @@ func InsertLayout(db *sql.DB, uuid string, layout [][]int) error {
 		"INSERT into restaurant (id, layout) VALUES ($1,$2)",
 		uuid,
 		array,
+	)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func UpdateLayout(db *sql.DB, uuid string, layout [][]int) error {
+	array, _ := json.Marshal(layout)
+
+	_, err := db.Query(
+		"UPDATE restaurant SET layout=$1 WHERE id=$2",
+		array,
+		uuid,
 	)
 	if err != nil {
 		return err
@@ -105,4 +130,16 @@ func Query(db *sql.DB, uuid string) ([]responseField, error) {
 		responseArray = append(responseArray, response)
 	}
 	return responseArray, nil
+}
+
+// delete layout of a restaurant from its unique uuid
+func DeleteLayout(db *sql.DB, id string) error {
+	_, err := db.Query(
+		"DELETE FROM uuididentify where id=$1",
+		id,
+	)
+	if err != nil {
+		return err
+	}
+	return nil
 }

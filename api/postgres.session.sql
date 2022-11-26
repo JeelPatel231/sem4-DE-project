@@ -17,6 +17,11 @@ CREATE TABLE restaurant (
     FOREIGN KEY(id) REFERENCES UUIDidentify(id)
 );
 
+--@block
+DELETE FROM uuididentify
+where id='9bf30c27-d822-4d2f-b5c2-6fd43e8abe40';
+DELETE FROM restaurant
+where id='9bf30c27-d822-4d2f-b5c2-6fd43e8abe40';
 
 --@block
 INSERT INTO uuididentify (name)
@@ -28,8 +33,8 @@ RETURNING id;
 -- insert layout of restaurant using uuid
 INSERT into restaurant (id, layout)
 VALUES (
-    '90f9fddb-4480-4ab9-9c37-f0b816b66770',
-    '[[1,3,1],[2,2,1]]'
+    'baea7561-6fe6-4bd1-8b99-aa9d28f274e5', -- UUID OF RESTAURANT
+    '[[1,3,1],[2,2,1]]' -- LAYOUT OF RESTAURANT
 );
 
 --@block
@@ -37,7 +42,10 @@ VALUES (
 select * from restaurant
 inner join uuididentify using (id);
 
-
+--@block
+-- join tables to get name and layout with null values
+select * from restaurant
+full join uuididentify using (id);
 
 -- DROP STATEMENTS // dangerous xD
 --@block
