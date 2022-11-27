@@ -10,9 +10,12 @@ import (
 )
 
 func main() {
-	// localDemo()
-
-	db := database.Connect(os.Getenv("POSTGRES_URL"))
+	localDemo()
+	db_url := os.Getenv("POSTGRES_URL")
+	if len(db_url) == 0 {
+		db_url = "postgres://postgres:postgres@localhost/postgres?sslmode=disable"
+	}
+	db := database.Connect(db_url)
 
 	app := fiber.New()
 	app.Use(cors.New(
